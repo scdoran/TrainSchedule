@@ -1,0 +1,27 @@
+* {
+     margin: 0;
+     background: url('../images/footer_lodyas/footer_lodyas.png') center center fixed;
+     background-repeat: no-repeat;
+     background-size: cover;
+     -webkit-background-size: cover;
+     -moz-background-size: cover;
+     -o-background-size: cover;
+}
+
+h1, h2, .panel-title, table, form, td, th {
+	color: white;
+	font-family: 'Josefin Sans', sans-serif;
+}
+
+th {
+	text-align: center;
+}
+
+h2 {
+	color: #ff5252;
+	font-family: 'Josefin Sans', sans-serif;
+}
+
+
+
+
