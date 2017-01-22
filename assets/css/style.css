@@ -17,6 +17,10 @@ th {
 	text-align: center;
 }
 
+th[data-sort] {
+     cursor: pointer;
+}
+
 h2 {
 	color: #ff5252;
 	font-family: 'Josefin Sans', sans-serif;

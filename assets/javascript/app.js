@@ -19,26 +19,42 @@ $(document).ready(function() {
     firstTrainTime: "",
     frequency: "",
     nextArrival: "",
-    minutesAway: ""
+    minutesAway: "", 
+    nextTrain: $("#trainSchedule").children().eq(0).children('tr').children('td:nth-child(1)').eq(0)
   }
 
+  // Used stupidtable.js to sort the trains in ascending order.
+  var $table = $("#trainSchedule").stupidtable();
+  var $th_to_sort = $table.find("thead th").eq(0);
+  $th_to_sort.stupidsort('asc');
+
+  // Displays the name of the next train to arrive.
+  $("#nextTrain").text(trainInfo.nextTrain.text());
+  console.log(trainInfo.nextTrain);
+
   database.ref().on("child_added", function(childSnapshot){
-        
-        console.log(childSnapshot.val().trainName);
-        console.log(childSnapshot.val().destination);
-        console.log(childSnapshot.val().frequency);
-        console.log(childSnapshot.val().firstTrainTime);
 
+        // Setting the first train time is pushed back a year so it comes before the current time.
         firstTrainTime = (childSnapshot.val().firstTrainTime);
+        var newFirstTrainTime = moment(firstTrainTime, "HH").subtract(1, "years");
 
-        var arrivalTime = moment(firstTrainTime, "H HH").format("X");
+        frequency = (parseInt(childSnapshot.val().frequency));
+
+        // Setting the current time.
         var currentTime = moment();
 
-        var timeDifference = moment().diff(moment(arrivalTime), "minutes");
+        // Finding the time difference between the current time and the converted train time in minutes.
+        var timeDifference = currentTime.diff(newFirstTrainTime, "minutes");
+
+        // Finding the time remaining by dividing the time difference and the train frequency.
         var timeRemaining = timeDifference % frequency;
 
+        // Setting the number of minutes away by subtracting the time remaining with the frequency.
         trainInfo.minutesAway = frequency - timeRemaining;
-        trainInfo.nextArrival = moment().add(trainInfo.minutesAway, "minutes");
+
+        // The next arrival time is set by adding the amount of minutes away to the current time.
+        trainInfo.nextArrival = currentTime.add(trainInfo.minutesAway, "minutes").format("hh:mm");
+
 
         var newRow = $("<tr class='newRow'>");
 
@@ -55,10 +71,12 @@ $(document).ready(function() {
         newRow.append(newCell3);
 
         var newCell4 = $("<td>");
+        newCell4.attr("data-sort-value", trainInfo.nextArrival);
         newCell4.text(trainInfo.nextArrival);
         newRow.append(newCell4);
 
         var newCell5 = $("<td>");
+        newCell5.attr("data-sort-value", trainInfo.minutesAway);
         newCell5.text(trainInfo.minutesAway);
         newRow.append(newCell5);
       
