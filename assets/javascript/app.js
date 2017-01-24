@@ -22,14 +22,10 @@ $(document).ready(function() {
     frequency: "",
     nextArrival: "",
     minutesAway: "", 
-    // nextTrain: 
-  }
+    }
 
   // Used stupidtable.js to sort the trains in ascending order.
   $("table").stupidtable();
-
-  // $("#nextTrain").text(trainInfo.nextTrain.text());
-  // console.log(trainInfo.nextTrain);
 
 // When a new "child" is added to the database...
   database.ref().on("child_added", function(childSnapshot){
@@ -56,7 +52,7 @@ $(document).ready(function() {
         trainInfo.nextArrival = currentTime.add(trainInfo.minutesAway, "minutes").format("hh:mm");
 
         // We create a new row.
-        var newRow = $("<tr>");
+        var newRow = $("<tr class='newRow'>");
 
         // We also create 5 cells. Each contain the train information, along with some data-attributes 
         // for the table sorting tool.
