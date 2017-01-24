@@ -8,20 +8,26 @@
      -o-background-size: cover;
 }
 
-h1, h2, .panel-title, table, form, td, th {
+h1 {
+     color: white;
+     font-family: 'Bungee Shade', cursive;
+}
+
+h2 {
+     color: #ff5252;
+     font-family: 'Josefin Sans', sans-serif;
+}
+
+.panel-title, table, form {
 	color: white;
 	font-family: 'Josefin Sans', sans-serif;
+     font-size: 18px;
 }
 
 th[data-sort] {
      cursor: pointer;
      text-align: center;
      font-weight: bold;
-}
-
-h2 {
-	color: #ff5252;
-	font-family: 'Josefin Sans', sans-serif;
 }
 
 
