@@ -21,16 +21,19 @@
 					<div class="panel-heading">
 						<h3 class="panel-title">Current Train Schedule</h3>
 					</div>
-					<table class="table table-striped table-bordered table-hover table-responsive" id="trainSchedule">
+					<table class="table tablesorter table-striped table-bordered table-responsive" id="trainSchedule">
 						<thead>
 							<tr>
-								<th data-sort= "trainName">Train Name</th>
-								<th data-sort= "destination">Destination</th>
-								<th data-sort= "frequency">Frequency (min)</th>
-								<th data-sort= "nextArrival" data-sort-default="asc">Next Arrival</th>
-								<th data-sort= "minutesAway" data-sort-default="asc">Minutes Away</th>
+								<th data-sort="string-ins">Train Name</th>
+								<th data-sort="string-ins">Destination</th>
+								<th data-sort="int">Frequency (min)</th>
+								<th data-sort="int">Next Arrival</th>
+								<th data-sort="int">Minutes Away</th>
 							</tr>
 						</thead>
+						<tbody>
+							
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -61,9 +64,9 @@
 							</div>
 
 							<div class="form-group">
-								<label for="input" class="col-sm-2 control-label">First Train Time (HH:mm - Military Time): </label>
+								<label for="input" class="col-sm-2 control-label">First Train Time (24 hour - Military Time): </label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="time" placeholder="When will it arrive?">
+									<input type="text" class="form-control" id="time" placeholder="When did it leave?">
 								</div>
 							</div>
 

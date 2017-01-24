@@ -1,3 +1,5 @@
+// Heroku Link: https://vast-oasis-26237.herokuapp.com/
+
 $(document).ready(function() {
 
   // Initialize Firebase
@@ -20,25 +22,23 @@ $(document).ready(function() {
     frequency: "",
     nextArrival: "",
     minutesAway: "", 
-    nextTrain: $("#trainSchedule").children().eq(0).children('tr').children('td:nth-child(1)').eq(0)
+    // nextTrain: 
   }
 
   // Used stupidtable.js to sort the trains in ascending order.
-  var $table = $("#trainSchedule").stupidtable();
-  var $th_to_sort = $table.find("thead th").eq(0);
-  $th_to_sort.stupidsort('asc');
+  $("table").stupidtable();
 
-  // Displays the name of the next train to arrive.
-  $("#nextTrain").text(trainInfo.nextTrain.text());
-  console.log(trainInfo.nextTrain);
+  // $("#nextTrain").text(trainInfo.nextTrain.text());
+  // console.log(trainInfo.nextTrain);
 
+// When a new "child" is added to the database...
   database.ref().on("child_added", function(childSnapshot){
 
         // Setting the first train time is pushed back a year so it comes before the current time.
         firstTrainTime = (childSnapshot.val().firstTrainTime);
         var newFirstTrainTime = moment(firstTrainTime, "HH").subtract(1, "years");
 
-        frequency = (parseInt(childSnapshot.val().frequency));
+        frequency = parseInt(childSnapshot.val().frequency);
 
         // Setting the current time.
         var currentTime = moment();
@@ -47,17 +47,19 @@ $(document).ready(function() {
         var timeDifference = currentTime.diff(newFirstTrainTime, "minutes");
 
         // Finding the time remaining by dividing the time difference and the train frequency.
-        var timeRemaining = timeDifference % frequency;
+        var timeRemaining = parseInt(timeDifference % frequency);
 
         // Setting the number of minutes away by subtracting the time remaining with the frequency.
-        trainInfo.minutesAway = frequency - timeRemaining;
+        trainInfo.minutesAway = parseInt(frequency - timeRemaining);
 
         // The next arrival time is set by adding the amount of minutes away to the current time.
         trainInfo.nextArrival = currentTime.add(trainInfo.minutesAway, "minutes").format("hh:mm");
 
+        // We create a new row.
+        var newRow = $("<tr>");
 
-        var newRow = $("<tr class='newRow'>");
-
+        // We also create 5 cells. Each contain the train information, along with some data-attributes 
+        // for the table sorting tool.
         var newCell1 = $("<td>");
         newCell1.text(childSnapshot.val().trainName);
         newRow.append(newCell1);
@@ -71,7 +73,7 @@ $(document).ready(function() {
         newRow.append(newCell3);
 
         var newCell4 = $("<td>");
-        newCell4.attr("data-sort-value", trainInfo.nextArrival);
+        newCell4.attr("data-sort-value", moment(trainInfo.nextArrival, "hh:mm").format("X"));
         newCell4.text(trainInfo.nextArrival);
         newRow.append(newCell4);
 
@@ -80,20 +82,23 @@ $(document).ready(function() {
         newCell5.text(trainInfo.minutesAway);
         newRow.append(newCell5);
       
-        $("#trainSchedule").children().eq(0).append(newRow);
+      // Append the new cells to the table body.
+        $("tbody").append(newRow);
 
+        // If there is an error with the data, the console will log a fail with the code that was not successful.
       }, function(errorObject) {
         console.log("Failed: " + errorObject.code);
   });
-
+  // When someone submits information...
   $("#submit").on("click", function(){
     event.preventDefault();
-    
+    // We will pick up the text values from all of the text input fields.
     trainInfo.trainName = $("#trainName").val().trim();
     trainInfo.destination = $("#destination").val().trim();
     trainInfo.firstTrainTime = $("#time").val().trim();
     trainInfo.frequency = parseInt($("#frequency").val().trim());
 
+    // The train name, destination, frequency and first train time will be pushed to the database.
     database.ref().push({
       trainName: trainInfo.trainName,
       destination: trainInfo.destination,
@@ -101,6 +106,7 @@ $(document).ready(function() {
       firstTrainTime: trainInfo.firstTrainTime,
     });
     
+    // The text values will be reset.
     $("#trainName").val("");
     $("#frequency").val("");
     $("#destination").val("");

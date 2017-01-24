@@ -13,12 +13,10 @@ h1, h2, .panel-title, table, form, td, th {
 	font-family: 'Josefin Sans', sans-serif;
 }
 
-th {
-	text-align: center;
-}
-
 th[data-sort] {
      cursor: pointer;
+     text-align: center;
+     font-weight: bold;
 }
 
 h2 {
