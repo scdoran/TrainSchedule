@@ -21,14 +21,14 @@ $(document).ready(function() {
     firstTrainTime: "",
     frequency: "",
     nextArrival: "",
-    minutesAway: "", 
-    }
+    minutesAway: "",
+  }
 
   // Used stupidtable.js to sort the trains in ascending order.
   $("table").stupidtable();
 
 // When a new "child" is added to the database...
-  database.ref().on("child_added", function(childSnapshot){
+  var newData = database.ref().on("child_added", function(childSnapshot){
 
         // Setting the first train time is pushed back a year so it comes before the current time.
         firstTrainTime = (childSnapshot.val().firstTrainTime);
@@ -70,11 +70,15 @@ $(document).ready(function() {
 
         var newCell4 = $("<td>");
         newCell4.attr("data-sort-value", moment(trainInfo.nextArrival, "hh:mm").format("X"));
+        newCell4.attr("data-time", trainInfo.nextArrival);
+        newCell4.attr("class", "nextArrival");
         newCell4.text(trainInfo.nextArrival);
         newRow.append(newCell4);
 
         var newCell5 = $("<td>");
         newCell5.attr("data-sort-value", trainInfo.minutesAway);
+        newCell5.attr("data-minutes", trainInfo.minutesAway);
+        newCell5.attr("class", "minutesAway");
         newCell5.text(trainInfo.minutesAway);
         newRow.append(newCell5);
       
@@ -85,6 +89,7 @@ $(document).ready(function() {
       }, function(errorObject) {
         console.log("Failed: " + errorObject.code);
   });
+
   // When someone submits information...
   $("#submit").on("click", function(){
     event.preventDefault();
@@ -95,7 +100,7 @@ $(document).ready(function() {
     trainInfo.frequency = parseInt($("#frequency").val().trim());
 
     // The train name, destination, frequency and first train time will be pushed to the database.
-    database.ref().push({
+    var trainData = database.ref().push({
       trainName: trainInfo.trainName,
       destination: trainInfo.destination,
       frequency: trainInfo.frequency,
